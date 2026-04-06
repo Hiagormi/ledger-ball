@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted } from 'vue'
 import FloatingBall from './components/FloatingBall.vue'
 import InputPanel from './components/InputPanel.vue'
 import SettingsPanel from './components/SettingsPanel.vue'
@@ -38,12 +38,16 @@ const closeStats = () => {
 
 // 监听窗口位置变化
 onMounted(async () => {
-  const { getCurrentWindow } = await import('@tauri-apps/api/window')
-  const win = getCurrentWindow()
+  try {
+    const { getCurrentWindow } = await import('@tauri-apps/api/window')
+    const win = getCurrentWindow()
 
-  win.onMoved(({ payload }) => {
-    position.value = { x: payload.x, y: payload.y }
-  })
+    win.onMoved(({ payload }) => {
+      position.value = { x: payload.x, y: payload.y }
+    })
+  } catch (e) {
+    console.log('Window API not available')
+  }
 })
 </script>
 
